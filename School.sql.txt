@@ -1,0 +1,374 @@
+create user school identified by s;
+grant dba to school;
+conn school/s;
+--------------------------------------------
+
+
+
+CREATE TABLE LEVELS
+(
+  LEVEL_NO    NUMBER(2),
+  LEVEL_NAME  VARCHAR2(20 BYTE)                 NOT NULL,
+  STATUS      NUMBER(1),
+  PRIMARY KEY
+ (LEVEL_NO)
+);
+
+
+CREATE TABLE YEAR
+(
+  YEAR_NO     NUMBER(3),
+  YEAR_NAME   VARCHAR2(20 BYTE)                 NOT NULL,
+  START_DATE  DATE,
+  END_DATE    DATE,
+  IS_CURRENT  VARCHAR2(15 BYTE),
+  PRIMARY KEY
+ (YEAR_NO)
+);
+
+
+CREATE TABLE RELATION
+(
+  RELATION_NO    NUMBER(2),
+  RELATION_NAME  VARCHAR2(20 BYTE)              NOT NULL,
+  STATUS         NUMBER(1),
+  PRIMARY KEY
+ (RELATION_NO)
+);
+
+
+CREATE TABLE NATIONALITY
+(
+  NAT_NO    NUMBER(3),
+  NAT_NAME  VARCHAR2(30 BYTE)                   NOT NULL,
+  STATUS    NUMBER(1),
+  PRIMARY KEY
+ (NAT_NO)
+);
+
+
+CREATE TABLE JOB
+(
+  JOB_NO    NUMBER(3),
+  JOB_NAME  VARCHAR2(30 BYTE)                   NOT NULL,
+  PRIMARY KEY
+ (JOB_NO)
+);
+
+
+CREATE TABLE USERS
+(
+  USER_NO    NUMBER(3),
+  USER_NAME  VARCHAR2(30 BYTE)                  NOT NULL,
+  PASSWORD   VARCHAR2(30 BYTE),
+  FULL_NAME  VARCHAR2(60 BYTE),
+  USER_TYPE  NUMBER(1),
+  STATUS     NUMBER(1),
+  PRIMARY KEY
+ (USER_NO)
+);
+
+
+CREATE TABLE CLASSES
+(
+  CLASS_NO     NUMBER(2),
+  CLASS_NAME   VARCHAR2(20 BYTE)                NOT NULL,
+  LEVELY       NUMBER(2),
+  ORDER_CLASS  NUMBER(5),
+  STATUS       NUMBER(1),
+  PRIMARY KEY
+ (CLASS_NO),
+  FOREIGN KEY (LEVELY) 
+ REFERENCES LEVELS (LEVEL_NO)
+);
+
+
+CREATE TABLE STUDENT
+(
+  STUD_NO           NUMBER(5),
+  STUD_NAME         VARCHAR2(50 BYTE)           NOT NULL,
+  AGE               NUMBER(3),
+  ADRESS            VARCHAR2(30 BYTE),
+  SEX               NUMBER(1),
+  BRITH_DATE        DATE,
+  BRITH_PLACE       VARCHAR2(20 BYTE),
+  CLASS             NUMBER(2),
+  NATIONALITY       NUMBER(3),
+  PARENT_NAME       VARCHAR2(50 BYTE),
+  PARENT_JOB        NUMBER(3),
+  PARENT_PHONE      VARCHAR2(20 BYTE),
+  PARENT_WORKPHONE  VARCHAR2(20 BYTE),
+  JOB_ADRESS        VARCHAR2(30 BYTE),
+  RELATION          NUMBER(2),
+  LEVELY            NUMBER(2),
+  STATUS            NUMBER(1),
+  PRIMARY KEY
+ (STUD_NO),
+  FOREIGN KEY (LEVELY) 
+ REFERENCES LEVELS (LEVEL_NO),
+  FOREIGN KEY (RELATION) 
+ REFERENCES RELATION (RELATION_NO),
+  FOREIGN KEY (PARENT_JOB) 
+ REFERENCES JOB (JOB_NO),
+  FOREIGN KEY (NATIONALITY) 
+ REFERENCES NATIONALITY (NAT_NO),
+  FOREIGN KEY (CLASS) 
+ REFERENCES CLASSES (CLASS_NO)
+);
+
+
+CREATE TABLE SUBJECT
+(
+  SUB_NO    NUMBER(2),
+  SUB_NAME  VARCHAR2(20 BYTE)                   NOT NULL,
+  CLASS     NUMBER(2),
+  STATUS    NUMBER(1),
+  PRIMARY KEY
+ (SUB_NO),
+  FOREIGN KEY (CLASS) 
+ REFERENCES CLASSES (CLASS_NO)
+);
+
+
+CREATE TABLE SHOBA
+(
+  SHOBA_NO    NUMBER(2),
+  SHOBA_NAME  VARCHAR2(20 BYTE)                 NOT NULL,
+  CLASS       NUMBER(2),
+  STATUS      NUMBER(1),
+  PRIMARY KEY (SHOBA_NO,class),
+  FOREIGN KEY (CLASS) 
+ REFERENCES CLASSES (CLASS_NO)
+);
+
+
+CREATE TABLE DEGREE
+(
+  STUDENT  NUMBER(5),
+  SUBJECT  NUMBER(2),
+  MARK1    NUMBER(3),
+  MARK2    NUMBER(3),
+  MARK3    NUMBER(3),
+  MARK4    NUMBER(3),
+  MARK5    NUMBER(3),
+  FOREIGN KEY (SUBJECT) 
+ REFERENCES SUBJECT (SUB_NO),
+  FOREIGN KEY (STUDENT) 
+ REFERENCES STUDENT (STUD_NO)
+);
+
+
+CREATE TABLE YEAR_STUD
+(
+  REGISTER  NUMBER(5),
+  STUDENT   NUMBER(5),
+  CLASS     NUMBER(2),
+  SHOBA     NUMBER(2),
+  LEVELY    NUMBER(5),
+  YEAR      NUMBER(3),
+  PRIMARY KEY
+ (REGISTER),
+  FOREIGN KEY (YEAR) 
+ REFERENCES YEAR (YEAR_NO),
+  FOREIGN KEY (LEVELY) 
+ REFERENCES LEVELS (LEVEL_NO),
+  FOREIGN KEY (SHOBA) 
+ REFERENCES SHOBA (SHOBA_NO),
+  FOREIGN KEY (CLASS) 
+ REFERENCES CLASSES (CLASS_NO),
+  FOREIGN KEY (STUDENT) 
+ REFERENCES STUDENT (STUD_NO)
+);
+
+
+
+Insert into CLASSES
+   (CLASS_NO, CLASS_NAME, LEVELY, ORDER_CLASS, STATUS)
+ Values
+   (4, '«·À«‰Ì', 1, 2, NULL);
+Insert into CLASSES
+   (CLASS_NO, CLASS_NAME, LEVELY, ORDER_CLASS, STATUS)
+ Values
+   (2, '«·—«»⁄', 1, 5, NULL);
+Insert into CLASSES
+   (CLASS_NO, CLASS_NAME, LEVELY, ORDER_CLASS, STATUS)
+ Values
+   (1, '«· «”⁄', 3, 9, NULL);
+Insert into CLASSES
+   (CLASS_NO, CLASS_NAME, LEVELY, ORDER_CLASS, STATUS)
+ Values
+   (5, '«·«Ê· «·À«‰ÊÌ', 3, 11, NULL);
+Insert into CLASSES
+   (CLASS_NO, CLASS_NAME, LEVELY, ORDER_CLASS, STATUS)
+ Values
+   (6, '«·”«œ”', 2, 6, NULL);
+Insert into CLASSES
+   (CLASS_NO, CLASS_NAME, LEVELY, ORDER_CLASS, STATUS)
+ Values
+   (3, '«·«Ê·', 1, 1, NULL);
+COMMIT;
+
+
+Insert into JOB
+   (JOB_NO, JOB_NAME)
+ Values
+   (1, '„Â‰œ”');
+Insert into JOB
+   (JOB_NO, JOB_NAME)
+ Values
+   (5, '”«∆ﬁ');
+Insert into JOB
+   (JOB_NO, JOB_NAME)
+ Values
+   (2, '‰Ã«—');
+Insert into JOB
+   (JOB_NO, JOB_NAME)
+ Values
+   (3, 'Õœ«œ');
+Insert into JOB
+   (JOB_NO, JOB_NAME)
+ Values
+   (4, '⁄«„·');
+COMMIT;
+
+Insert into LEVELS
+   (LEVEL_NO, LEVEL_NAME, STATUS)
+ Values
+   (1, '«·«» œ«∆Ì…', NULL);
+Insert into LEVELS
+   (LEVEL_NO, LEVEL_NAME, STATUS)
+ Values
+   (2, '«·«”«”Ì', NULL);
+Insert into LEVELS
+   (LEVEL_NO, LEVEL_NAME, STATUS)
+ Values
+   (3, '«·À«‰ÊÌ…', NULL);
+COMMIT;
+
+Insert into NATIONALITY
+   (NAT_NO, NAT_NAME, STATUS)
+ Values
+   (1, 'Ì„‰Ì', NULL);
+Insert into NATIONALITY
+   (NAT_NO, NAT_NAME, STATUS)
+ Values
+   (2, '”⁄ÊœÌ', NULL);
+COMMIT;
+
+Insert into RELATION
+   (RELATION_NO, RELATION_NAME, STATUS)
+ Values
+   (1, '«·«»', NULL);
+Insert into RELATION
+   (RELATION_NO, RELATION_NAME, STATUS)
+ Values
+   (2, '«·«Œ', NULL);
+Insert into RELATION
+   (RELATION_NO, RELATION_NAME, STATUS)
+ Values
+   (3, '«·⁄„', NULL);
+Insert into RELATION
+   (RELATION_NO, RELATION_NAME, STATUS)
+ Values
+   (4, '«·Œ«·', NULL);
+Insert into RELATION
+   (RELATION_NO, RELATION_NAME, STATUS)
+ Values
+   (5, '«·Ãœ', NULL);
+COMMIT;
+
+Insert into SHOBA
+   (SHOBA_NO, SHOBA_NAME, CLASS, STATUS)
+ Values
+   (9, '(»)', 5, NULL);
+Insert into SHOBA
+   (SHOBA_NO, SHOBA_NAME, CLASS, STATUS)
+ Values
+   (10, '(»)', 1, NULL);
+Insert into SHOBA
+   (SHOBA_NO, SHOBA_NAME, CLASS, STATUS)
+ Values
+   (11, '(»)', 2, NULL);
+Insert into SHOBA
+   (SHOBA_NO, SHOBA_NAME, CLASS, STATUS)
+ Values
+   (1, '(√)', 2, NULL);
+Insert into SHOBA
+   (SHOBA_NO, SHOBA_NAME, CLASS, STATUS)
+ Values
+   (8, '(√)', 6, NULL);
+COMMIT;
+
+Insert into STUDENT
+   (STUD_NO, STUD_NAME, AGE, ADRESS, SEX, 
+    BRITH_DATE, BRITH_PLACE, CLASS, NATIONALITY, PARENT_NAME, 
+    PARENT_JOB, PARENT_PHONE, PARENT_WORKPHONE, JOB_ADRESS, RELATION, 
+    LEVELY, STATUS)
+ Values
+   (1, '›—Ìœ ‘ÊﬁÌ', 5, ' ⁄“', 1, 
+    TO_DATE('01/01/2006 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), '’»—', 3, 1, '‘ÊﬁÌ ⁄»œ«·—Õ„‰ ⁄·Ì', 
+    5, '777135977', '0244567', '⁄œ‰', 1, 
+    1, NULL);
+Insert into STUDENT
+   (STUD_NO, STUD_NAME, AGE, ADRESS, SEX, 
+    BRITH_DATE, BRITH_PLACE, CLASS, NATIONALITY, PARENT_NAME, 
+    PARENT_JOB, PARENT_PHONE, PARENT_WORKPHONE, JOB_ADRESS, RELATION, 
+    LEVELY, STATUS)
+ Values
+   (3, '«‰Ê—', 33, ' « «', 1, 
+    TO_DATE('08/07/0666 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), '€›€›', 4, 2, '›€ﬁ', 
+    5, '555555', '55555', '›€›€ﬁ', 2, 
+    1, 0);
+Insert into STUDENT
+   (STUD_NO, STUD_NAME, AGE, ADRESS, SEX, 
+    BRITH_DATE, BRITH_PLACE, CLASS, NATIONALITY, PARENT_NAME, 
+    PARENT_JOB, PARENT_PHONE, PARENT_WORKPHONE, JOB_ADRESS, RELATION, 
+    LEVELY, STATUS)
+ Values
+   (2, '⁄„—«‰  ⁄»œ«·—Õ„‰', 18, '’»—', 1, 
+    TO_DATE('01/01/1995 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), ' ⁄“', 5, 1, '⁄»œ«·—Õ„‰', 
+    5, '771077048', '0133456', '’‰⁄«¡', 1, 
+    3, NULL);
+COMMIT;
+
+
+Insert into USERS
+   (USER_NO, USER_NAME, PASSWORD, FULL_NAME, USER_TYPE, 
+    STATUS)
+ Values
+   (1, '«‰Ê—', '‘Ï’‘ﬁ', '«‰Ê— Õ„Ìœ ⁄»œ«··…', 1, 
+    NULL);
+COMMIT;
+
+Insert into YEAR
+   (YEAR_NO, YEAR_NAME, START_DATE, END_DATE, IS_CURRENT)
+ Values
+   (1, '2010/2011', TO_DATE('01/01/2010 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), TO_DATE('12/30/2010 00:00:00', 'MM/DD/YYYY HH24:MI:SS'), '2010-');
+COMMIT;
+
+Insert into YEAR_STUD
+   (REGISTER, STUDENT, CLASS, SHOBA, LEVELY, 
+    YEAR)
+ Values
+   (3, 2, 4, 1, 3, 
+    1);
+Insert into YEAR_STUD
+   (REGISTER, STUDENT, CLASS, SHOBA, LEVELY, 
+    YEAR)
+ Values
+   (1, 1, 4, 1, 1, 
+    1);
+Insert into YEAR_STUD
+   (REGISTER, STUDENT, CLASS, SHOBA, LEVELY, 
+    YEAR)
+ Values
+   (2, 1, 3, 1, 1, 
+    NULL);
+Insert into YEAR_STUD
+   (REGISTER, STUDENT, CLASS, SHOBA, LEVELY, 
+    YEAR)
+ Values
+   (4, 1, 4, NULL, 1, 
+    NULL);
+COMMIT;
+
